@@ -1,8 +1,8 @@
 import zeep
 
-userLogin       = "Ralf4IOU"
-userPassword    = "Letmein123"
-callerId        = "773B3EBA-D4FC-4853-A32F-06FD23A5C902"
+userLogin       = "" # From you KYC
+userPassword    = "" # From you KYC
+callerId        = "" # caller ID from KYC completion provided by us
 wsdl            = './WSDL/WinstantPayWebService.xml'
 
 client = zeep.Client(wsdl=wsdl)
