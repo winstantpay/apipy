@@ -11,15 +11,15 @@ These are the Python examples for using the WinstantPay webservice API
 WinstantPay allows anyone to trade or pay globally with any currency, including cryptos and other tokens anytime and from anywhere. Originating from a foreign currency exchange and trade finance background the WinstantPay core is utilized by WinstantPay to provide a solid means for ecosystem partners to develop mobile and electronic wallets on this platform. 
 
 ### Install: ###
-
-Clone this repository then
+Clone this repository then get started right away
 ### Requirements: ###
 
 
 ### Quick start
+We do usually use the [zeep](http://docs.python-zeep.org/) libray to provide a SOAP client.
 
 ```bash
-Do something cool
+pip install zeep
 ```
 >Please note that you need a pre-shared key to use the API. 
 >We call this key a caller-id.
@@ -36,19 +36,17 @@ After you have all you credentials please follow the following steps (explained 
 ## Basic Flow of the API
 
 ### Security
-Even though security credentials are provided through the WSsecurityCall
-```python
-# TODO Add Code
-```
-our API foresees that every request has to be authorised and the ServiceCallerIdentity object has to be provided as part of the args object iin very API method call.
+
+Our API foresees that every request has to be authorised and the ServiceCallerIdentity object has to be provided as part of the args object iin very API method call.
 
 ```python
-
-ServiceCallerIdentity: {
-    LoginId: userLogin,
-    Password: userPassword,
-    ServiceCallerId: callerId 
-},
+request = {
+    'ServiceCallerIdentity':{
+        'LoginId': userLogin,
+        'Password': userPassword,
+        'ServiceCallerId': callerId
+    }
+}
 ```
 ### Flow
 
@@ -67,58 +65,81 @@ or.
 ## Example
 
 We are sure you'll find your way around the source and keep the explanations here rather brief and explain one example in full.
-### GetAccountBalances
+### a
 
 Let's look into an example to get your account balances:
 
 ```python
-#TODO: add code
+import zeep
+
+userLogin       = "" # get your details through our KYC
+userPassword    = "" # get your details through our KYC
+callerId        = ""
+wsdl            = './WSDL/WinstantPayWebService.xml'
+
+client = zeep.Client(wsdl=wsdl)
+
+res = client.service.UserSettingsGetSingle(request = {
+    'ServiceCallerIdentity':{
+        'LoginId': userLogin,
+        'Password': userPassword,
+        'ServiceCallerId': callerId
+    }
+})
+
+customer_id = res.UserSettings.UserId
+
+res = client.service.CustomerAccountBalancesGet(request = {
+    'ServiceCallerIdentity':{
+        'LoginId': userLogin,
+        'Password': userPassword,
+        'ServiceCallerId': callerId
+    },
+    'CustomerId': customer_id
+})
+
+print res
 ```
-As often in python It all starts at the end of the scipt. 
-All program logic is executed in the soapresponse.
+
 In the GetAccountBalances case we call on two webservices
 1. UserSettingsGetSingle  -- to retrieve the UserId and;
 2. CustomerAccountBalancesGet - to get the customers account balances
 
 > the customer in this case is the same as the user.
 
-In most scripts the wpyInitialize function is called. This function connects to the WinstantPay core, and retrieves your User Id, which will be used in many funcations of the webservice.
-
-```python
-#TODO: Add Code
+#### Explore the Webservice
+From the command line, you can run:
+```bash
+python -mzeep WSDL/WinstantPayWebService.xml
 ```
-
-For the actual Soap stuff we are using the XXYZYZZ module, which provides a python SOAP client for invoking web services.
-
-To call the webservice a client needs to be created and a the proper SOAP paramters need to be configures, like so:
-
-```python
-#TODO: Add Code
-```
-The first two segments, GPWebService and BasicHttpsBinding_IGPWebService1 stay afix. The last segment, in this case UserSettingsGetSingle defines the actual service of API we are calling.
+to explore the webservice.
 
 #### API Call and Parameters 
-This method is then called with parameters to consume the endpoint. 
+All the service endpouints are listed in the segment: 
+```bash
+Service: GPWebService: Operations. 
+```
+Simply call the method is then called with parameters to consume the endpoint like so:
 
 ```python
-#TODO: Add Code
+res = client.service.UserSettingsGetSingle(request = {
+    'ServiceCallerIdentity':{
+        'LoginId': userLogin,
+        'Password': userPassword,
+        'ServiceCallerId': callerId
+    }
+})
 ```
-The args JSON object define the input paramters of the webservice. 
+The request JSON object define the input paramters of the webservice. 
 
-```python
-#TODO: Add Code
-```
 #### Response processing
 
-upon return the **result** variable is set and can be accessed in the closure, like so:
-```python
-#TODO: Add Code
-```
-the section **Endpoints** provide an overview over the  inputs (the args JSON object and the response fobject.
+upon return the result is directly returned.
+
+the section **Endpoints** provide an overview over the  inputs (the request JSON object and the response object.
 
 >Now that you understand how the general flow works, we hope that  and when in doubt you can browse the WSDL file by using one of the many SOAP toolsets.. 
->We recommend the free community version of [SoapUi](https://www.soapui.org/)  to browse and test our soap API's
-
+>We recommend the free community version of [SoapUi](https://www.soapui.org/)  to browse and test our soap API's or use the zeep explorer introduced above.
 
 
 ## Endpoints
