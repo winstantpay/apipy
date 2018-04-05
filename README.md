@@ -1,4 +1,4 @@
-# winstantpay-apipy 
+# winstantpay-apipy
 
 
 ![The WinstantPay Logo](http://www.winstantpay.com/assets/img/logo-winstantpay-L-notag-trans.png "The WinstantPay Logo")
@@ -25,7 +25,7 @@ pip install zeep
 >We call this key a caller-id.
 >
 >To get the caller id, you need to complete your KYC (Know Your Client), which will result in >you have a user ID and password with WinstantPay. 
->To complete the basic KYC, you need a working email and telephone number.
+>To complete the basic KYC, you need a working email and telephone number and head over to [WORLD-KYC](https://winstantpay.worldkyc.com/)
 
 >Once done, send us an email to <api@winstantpay.com> from the registered email and we ?will get in touch prompty (usually via SMS to your phone 24hours).
 >
@@ -65,7 +65,6 @@ or.
 ## Example
 
 We are sure you'll find your way around the source and keep the explanations here rather brief and explain one example in full.
-### a
 
 Let's look into an example to get your account balances:
 
@@ -321,7 +320,7 @@ The Object:
 ```python
  [   { EntryTypeName: 'Payment',
        ItemTypeId: 10,
-       ItemTypeName: 'Deposit',
+       ItemTypeNa# From you KYCme: 'Deposit',
        ItemId: 'an ID',
        ItemReference: 'DEPO1001055',
        AmountCredit: 500000,
@@ -353,7 +352,7 @@ let args = {
         },
         QuoteId: quoteId // comming from FXDealQuoteCreate
     }
-};
+}
 ```
 Method: 
 ```python
