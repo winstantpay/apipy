@@ -128,11 +128,7 @@ the section **Endpoints** provide an overview over the  inputs (the request JSON
 - [UserSettingsGetSingle](#usersettingsgetsingle)
 
 ### CurrencyListGetPaymentCurrencies
-#### Call
-```python
-
-```
-Method: 
+#### Code
 ```python
 import zeep
 import config
@@ -237,29 +233,45 @@ The Object:
 }
 ```
 ### CustomerAccountBalancesGet
-#### Call
+#### Code
 ```python
-args = {
-    request: {
-        ServiceCallerIdentity: {
-            LoginId: userLogin,
-            Password: userPassword,
-            ServiceCallerId: callerId 
+import zeep
+import config
+
+#
+# The nain 
+#
+def main():
+    wsdl            = './WSDL/WinstantPayWebService.xml'
+    client          = zeep.Client(wsdl=wsdl)
+
+    res = client.service.UserSettingsGetSingle(request = {
+        'ServiceCallerIdentity':{
+            'LoginId': config.userLogin,
+            'Password': config.userPassword,
+            'ServiceCallerId': config.callerId
+        }
+    })
+
+    customer_id = res.UserSettings.UserId
+
+    res = client.service.CustomerAccountBalancesGet(request = {
+        'ServiceCallerIdentity':{
+            'LoginId': config.userLogin,
+            'Password': config.userPassword,
+            'ServiceCallerId': config.callerId
         },
-        CustomerId: customerId // this is the userId from the priory called UserSettingsGetSingle
-    }
-};
-```
-Method: 
-```python
-var method = client['GPWebService']['BasicHttpsBinding_IGPWebService1']['CustomerAccountBalancesGet'];
+        'CustomerId': customer_id
+    })
+    print res
+
+#
+# Invoke Main from here to solve accidential import 
+#
+if __name__ == "__main__":
+    main()
 ```
 #### Response
-The Path:
-```python
-var balances = gpWebResult.CustomerAccountBalancesGetResult.Balances;
-
-```
 The Object:
 ```python
 { CustomerBalanceData: 
@@ -313,31 +325,38 @@ The Object:
        BalanceAvailableBase: 154291.5 } ] }
 ```
 ### CustomerAccountStatementGetSingle
-#### Call
+#### Code
 ```python
-let args = {
-    request: {
-        ServiceCallerIdentity: {
-            LoginId: userLogin,
-            Password: userPassword,
-            ServiceCallerId: callerId 
+import zeep
+import config
+
+#
+# The nain 
+#
+def main():
+    wsdl            = './WSDL/WinstantPayWebService.xml'
+    client          = zeep.Client(wsdl=wsdl)
+
+    res = client.service.CustomerAccountStatementGetSingle(request = {
+        'ServiceCallerIdentity':{
+            'LoginId': config.userLogin,
+            'Password': config.userPassword,
+            'ServiceCallerId': config.callerId
         },
-        AccountId: accountId, // If you do not know them, you can find them in the response to CustomerAccountBalancesGet
-        StartDate: "2018-01-01", // Date format is YYYY-MM-DD
-        EndDate: "2018-12-01" // Date format is YYYY-MM-DD        
-    }
-};
-```
-Method: 
-```python
-var method = client['GPWebService']['BasicHttpsBinding_IGPWebService1']['CustomerAccountStatementGetSingle'];
+        # If you do not know your customerID, you can find them in the response to CustomerAccountBalancesGet
+        'AccountId': config.accountId,
+        'StartDate': "2018-01-01", # Date format is YYYY-MM-DD
+        'EndDate': "2018-12-01" # Date format is YYYY-MM-DD        
+    })
+    print res
+
+#
+# Invoke Main from here to solve accidential import 
+#
+if __name__ == "__main__":
+    main()
 ```
 #### Response
-The Path:
-```python
-var transactions = gpWebResult.CustomerAccountStatementGetSingleResult.Entries;
-```
-> This is the main response object, even though there is more...
 The Object:
 ```python
  [   { EntryTypeName: 'Payment',
@@ -360,340 +379,41 @@ The Object:
        BankMemo: 'ACCOUNT INSTANT TRANSFER' } 
 ]
 ```
-
 ### FXDealQuoteBookAndInstantDeposit
->The endpoints are listed alphabetically. IRL you would create a quote from a FX deal first
-#### Call
-```python
-let args = {
-    request: {
-        ServiceCallerIdentity: {
-            LoginId: userLogin,
-            Password: userPassword,
-            ServiceCallerId: callerId 
-        },
-        QuoteId: quoteId // comming from FXDealQuoteCreate
-    }
-}
-```
-Method: 
-```python
-var method = client['GPWebService']['BasicHttpsBinding_IGPWebService1']['FXDealQuoteBookAndInstantDeposit'];
-```
-#### Response
-The Path:
-```python
-var gpWebResult = result.FXDealQuoteBookAndInstantDepositResult.FXDepositData;
-```
-The Object:
-```python
-{ FXDealId: 'an ID',
-  FXDealReference: 'SPOT1009694',
-  DepositId: 'an ID',
-  DepositReference: 'DEPO1001106' }
-```
->The FXDeal and Deposit references above will be different in your case
+>The remaining web-service calls are described here only. Please refer to the python code file with the matching name.
+FXDealQuoteBookAndInstantDeposit.py
 
 ### FXDealQuoteCreate
-#### Call
-```python
-let args = {
-    request: {
-        ServiceCallerIdentity: {
-            LoginId: userLogin,
-            Password: userPassword,
-            ServiceCallerId: callerId 
-        },
-        CustomerId: customerId, // You know where to get this
-        BuyCCY: "MMK",
-        SellCCY: "THB",
-        Amount: "1000.00",
-        AmountCCY: "THB",
-        DealType: "Spot",
-        IsForCurrencyCalculator: false
-    }
-};
-```
-Method: 
-```python
-var method = client['GPWebService']['BasicHttpsBinding_IGPWebService1']['FXDealQuoteCreate'];
-```
-#### Response
-The Path:
-```python
-var gpWebResult = result.FXDealQuoteCreateResult.Quote;
-```
-The Object:
-```python
-{ QuoteId: 'an ID',
-  QuoteReference: 'QUOT1234203',
-  QuoteSequenceNumber: '1234203',
-  CustomerAccountNumber: '0123455667',
-  DealType: 'SPOT',
-  BuyAmount: '42071.00 MMK',
-  BuyCurrencyCode: 'MMK',
-  SellAmount: '1000.00 THB',
-  SellCurrencyCode: 'THB',
-  Rate: '42.071',
-  RateFormat: 'THB / MMK',
-  DealDate: '4/2/2018 12:00:00 AM',
-  ValueDate: '4/4/2018 12:00:00 AM',
-  QuoteTime: '2018-04-01T15:11:26.130Z',
-  ExpirationTime: '2018-04-01T15:11:56.130Z',
-  IsForCurrencyCalculator: false }
-```
+
 
 ### GetCustomerAccountBalances
 This is identical to the [CustomerAccountBalancesGet](#customeraccountbalancesget) endpoint and is listed for historical reasons only.
 
 ### GetLibraryVersion
-#### Call
-```python
-let args = {
-};
-```
-Method: 
-```python
-var method = client['GPWebService']['BasicHttpsBinding_IGPWebService1']['GetLibraryVersion'];
-```
-#### Response
-The Path:
-```python
-var librayVersion = gpWebResult.GetLibraryVersionResult;
-```
-The Object:
-```json
-4.5.7.15
-```
->Just use this example to see if your SOAP client is working allright
+returns the version of the web-service. Please quote this version in any support request you may have.
+The version of the time wriring this readme is: 4.5.7.15
+>Just use this example to see if your SOAP client is working allright, before you request further support.
 
 ### InstantPaymentCreate
-#### Call
-```python
-let args = {
-    let args = {
-        request: {
-            ServiceCallerIdentity: {
-                LoginId: userLogin,
-                Password: userPassword,
-                ServiceCallerId: callerId // iou_caller_id / bank id
-            },
-            FromCustomer: fromWallet, // that is an alias - check the wallet demmo for more information
-            ToCustomer: toWallet, // that is an a;ias
-            Amount: amount,
-            CurrencyCode: currency,
-            ValueDate: "",
-            ReasonForPayment:"",
-            ExternalReference: "",
-            Memo:""
-        }
-    };
-};
-```
-Method: 
-```python
-var method = client['GPWebService']['BasicHttpsBinding_IGPWebService1']['InstantPaymentCreate'];
-```
-#### Response
-The Path:
-```python
-var gpWebResult = result.InstantPaymentCreateResult.PaymentInformation;
-```
-The Object:
-```python
-{ PaymentId: 'an ID',
-  PaymentReference: 'INST1000857' }
-```
->The payment references above will be different in your case
->The ID above will be used in the payment related calls following
 
 ### InstantPaymentGetSingle
 >Even though the InstantPaymentCreate returns a paymentId, this InstantPaymentGetSingle service depends on a payment that is completed already.
 > So this service is called after the InstantPaymentPost function as shown in the example.
-
-#### Call
-```python
-let args = {
-    request: {
-        ServiceCallerIdentity: {
-            LoginId: userLogin,
-            Password: userPassword,
-            ServiceCallerId: callerId
-        },
-        InstantPaymentId: paymentId
-    }
-};
-```
-Method: 
-```python
-var method = client['GPWebService']['BasicHttpsBinding_IGPWebService1']['InstantPaymentGetSingle'];
-```
-#### Response
-The Path:
-```python
-var gpWebResult = result.InstantPaymentGetSingleResult.Payment;
-```
-The Object:
-```python
-{ PaymentId: 'an ID',
-  PaymentReference: 'INST1000864',
-  FromCustomerAlias: 'gFromWallet', // see axample code
-  ToCustomerAlias: 'tToWallet', // see example code
-  FromCustomerName: 'String',
-  FromCustomerId: 'an ID',
-  ToCustomerName: 'String',
-  ToCustomerId: 'an ID',
-  PaymentStatus: 'Posted',
-  Amount: 20,
-  AmountCurrencyScale: 2,
-  CCY: 'THB',
-  ValueDate: '2018-04-01T00:00:00.000Z',
-  ProcessingBranchName: undefined,
-  ProcessingBranchCode: undefined,
-  CreatedTime: '2018-04-01T09:45:06.160Z',
-  CreatedByName: 'String - fullanem of the gFromWallet',
-  PostedTime: '2018-04-01T09:45:07.440Z',
-  PostedByName: 'String',
-  IsDeleted: false,
-  ReasonForPayment: undefined,
-  ExternalReference: undefined,
-  BankMemo: undefined }
-```
 ### InstantPaymentPost
-#### Call
-```python
-let args = {
-    request: {
-        ServiceCallerIdentity: {
-            LoginId: userLogin,
-            Password: userPassword,
-            ServiceCallerId: callerId
-        },
-        InstantPaymentId: paymentId
-    }
-};
-```
-Method: 
-```python
-var method = client['GPWebService']['BasicHttpsBinding_IGPWebService1']['InstantPaymentPost'];
-```
-#### Response
-The Path:
-```python
-var gpWebResult = result.InstantPaymentPostResult;
-```
-The Object:
-```python
-{ ServiceResponse: 
-   { HasErrors: false,
-     HasWarnings: false,
-     Responses: 
-      { ServiceResponseData: 
-         { ResponseCode: 0,
-           ResponseType: 'Information',
-           Message: 'Success',
-           MessageDetails: 'Command completed successfully',
-           FieldName: undefined,
-           FieldValue: undefined } } } }
-```
->Call the InstantPaymentGetSingle servcie to get all the details of  the successful payment
+This endpoint actually transacts the payment in the system and is usually called after the payment has been created with InstantPaymentCreate
+>Call the InstantPaymentGetSingle service to get all the details of  the successful payment
 
 ### UserSettingsGetSingle
->his service returns all the settings, The user id will be required in other services.
-
-#### Call
-```python
-let args = {
-    request: {
-        ServiceCallerIdentity: {
-            LoginId: userLogin,
-            Password: userPassword,
-            ServiceCallerId: callerId // iou_caller_id / bank id
-        }
-    }
-};
-```
-Method: 
-```python
-var method = client['GPWebService']['BasicHttpsBinding_IGPWebService1']['UserSettingsGetSingle'];
-```
-#### Response
-The Path:
-```python
-var userId = gpWebResult.UserSettingsGetSingleResult.UserSettings;
-```
-The Object:
-```python
-{ UserSettingsGetSingleResult: 
-   { ServiceResponse: 
-      { HasErrors: false,
-        HasWarnings: false,
-        Responses: 
-         { ServiceResponseData: 
-            { ResponseCode: 0,
-              ResponseType: 'Information',
-              Message: 'Success',
-              MessageDetails: 'Command completed successfully',
-              FieldName: undefined,
-              FieldValue: undefined } } },
-     UserSettings: 
-      { AccessRights: 
-         { AccessRightData: 
-            [ 
-                { 
-                    AccessRightCategoryName: 'Customers',
-                    AccessRightDescription: 'Manage all the users from the same customer.',
-                    AccessRightId: 6,
-                    AccessRightName: 'Manage Customer Users',
-                    CanOverrideDualControl: false,
-                    LimitAmount: 0,
-                    UsesDualControl: false,
-                    UsesLimitAmount: false 
-                }
-            ]
-
-        },
-        BankID: 'the bank ID code - 00000000-0000-0000-0000-000000000000',
-        BaseCountryCode: 'US',
-        BaseCurrencyCode: 'THB',
-        BaseCurrencyID: 141,
-        BelongsToWhiteLabelBranch: false,
-        BranchID: 'The branch Id if any - 00000000-0000-0000-0000-000000000000',
-        CultureCode: 'en-US',
-        CultureID: 1,
-        EmailAddress: 'yourKYCEmail address',
-        Fax: "String or undefined",
-        FirstName: 'String',
-        IsACHBatchFeatureEnabled: true,
-        IsBankAutoCoverFeatureEnabled: true,
-        IsBankIncomingPaymentEnabled: true,
-        IsBankInstantPaymentFeatureEnabled: true,
-        IsCurrencyCalculatorEnabled: true,
-        IsEnabled: true,
-        IsFileAttachmentFeatureEnabled: true,
-        IsLockedOut: false,
-        IsManageCustomOFACListsFeatureEnabled: true,
-        IsPaymentValueTypeEnabled: true,
-        IsSWIFTMessageFeatureEnabled: true,
-        IsTradeFinanceFeatureEnabled: true,
-        IsTwoFactorAuthenticationFeatureEnabled: false,
-        IsTwoFactorAuthenticationRequired: false,
-        LastName: 'Hundertmark',
-        LinkedAccessRightTemplateID: 'an ID 00000000-0000-0000-0000-000000000000',
-        LinkedAccessRightTemplateName: 'AllCustomerAccessRight',
-        OrganizationID: 'an ID - 00000000-0000-0000-0000-000000000000',
-        OrganizationName: 'a String from your KYC',
-        OrganizationTypeID: 2,
-        PageTitle: undefined,
-        Phone: undefined,
-        Theme: 'TSG',
-        UserId: '00000000-0000-0000-0000-000000000000 - That is the ID you want',
-        UserName: 'Ralf4IOU',
-        WhiteLabelProfileID: '00000000-0000-0000-0000-000000000000' } } }
-
-```
->Note:
+Here you get all the user details, such as account numbers for the user,
 > The import field to use from the response is the UserId field has this is used in suquent calls of the webservice
+
+
+## To get a wallet 
+### KYC first
+Head right to the [Demo](https://demo.winstantpay.com/) platform and complete your KYC first.
+To complete your KYC you only need a working email address you can access. 
+After successful subscription to KYC your user credentials will be added to the system and you can login to the wallet. 
+After that, please send us an email so we can creaate a caller-id for you and your all set to go and use this API.
 
 
 ## Wallet Demo
