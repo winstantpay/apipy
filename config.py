@@ -1,7 +1,7 @@
-userLogin = "Ralf4IOU"
-userPassword = "Letmein123@"
-callerId = "773B3EBA-D4FC-4853-A32F-06FD23A5C902"
-accountId = "9fdd5bd1-ec8a-483e-8fb0-7b42272f5e58"
-userId = "eaaf9631-3027-e811-b9ba-002590067f61"
-gFromWallet = "RALF"
-gToWallet = "HERVE"
+#
+# Please get your login credentials at 
+# demo.winstantpay.com and register with WorldKyc
+#
+userLogin = ""
+userPassword = ""
+callerId = ""
