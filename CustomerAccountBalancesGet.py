@@ -11,7 +11,7 @@ def main():
     res = client.service.UserSettingsGetSingle(request = {
         'ServiceCallerIdentity':{
             'LoginId': config.userLogin,
-            'Password': config.gituserPassword,
+            'Password': config.userPassword,
             'ServiceCallerId': config.callerId
         }
     })
