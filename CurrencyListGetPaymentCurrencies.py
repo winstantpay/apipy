@@ -8,7 +8,7 @@ def main():
     wsdl            = './WSDL/WinstantPayWebService.xml'
     client          = zeep.Client(wsdl=wsdl)
 
-    res = client.service.UserSettingsGetSingle(request = {
+    res = client.service.CurrencyListGetPaymentCurrencies(request = {
         'ServiceCallerIdentity':{
             'LoginId': config.userLogin,
             'Password': config.userPassword,
@@ -16,16 +16,6 @@ def main():
         }
     })
 
-    customer_id = res.UserSettings.UserId
-
-    res = client.service.CustomerAccountBalancesGet(request = {
-        'ServiceCallerIdentity':{
-            'LoginId': config.userLogin,
-            'Password': config.userPassword,
-            'ServiceCallerId': config.callerId
-        },
-        'CustomerId': customer_id
-    })
     print res
 
 #

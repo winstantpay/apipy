@@ -42,9 +42,9 @@ Our API foresees that every request has to be authorised and the ServiceCallerId
 ```python
 request = {
     'ServiceCallerIdentity':{
-        'LoginId': userLogin,
-        'Password': userPassword,
-        'ServiceCallerId': callerId
+        'LoginId': config.userLogin,
+        'Password': config.userPassword,
+        'ServiceCallerId': config.callerId
     }
 }
 ```
@@ -69,35 +69,7 @@ We are sure you'll find your way around the source and keep the explanations her
 Let's look into an example to get your account balances:
 
 ```python
-import zeep
-
-userLogin       = "" # get your details through our KYC
-userPassword    = "" # get your details through our KYC
-callerId        = ""
-wsdl            = './WSDL/WinstantPayWebService.xml'
-
-client = zeep.Client(wsdl=wsdl)
-
-res = client.service.UserSettingsGetSingle(request = {
-    'ServiceCallerIdentity':{
-        'LoginId': userLogin,
-        'Password': userPassword,
-        'ServiceCallerId': callerId
-    }
-})
-
-customer_id = res.UserSettings.UserId
-
-res = client.service.CustomerAccountBalancesGet(request = {
-    'ServiceCallerIdentity':{
-        'LoginId': userLogin,
-        'Password': userPassword,
-        'ServiceCallerId': callerId
-    },
-    'CustomerId': customer_id
-})
-
-print res
+    print res
 ```
 
 In the GetAccountBalances case we call on two webservices
@@ -158,61 +130,111 @@ the section **Endpoints** provide an overview over the  inputs (the request JSON
 ### CurrencyListGetPaymentCurrencies
 #### Call
 ```python
-#TODO: Add Code
+
 ```
 Method: 
 ```python
-#TODO: Add Code
+import zeep
+import config
+
+#
+# The nain 
+#
+def main():
+    wsdl            = './WSDL/WinstantPayWebService.xml'
+    client          = zeep.Client(wsdl=wsdl)
+
+    res = client.service.CurrencyListGetPaymentCurrencies(request = {
+        'ServiceCallerIdentity':{
+            'LoginId': config.userLogin,
+            'Password': config.userPassword,
+            'ServiceCallerId': config.callerId
+        }
+    })
+
+    print res
+
+#
+# Invoke Main from here to solve accidential import 
+#
+if __name__ == "__main__":
+    main()
 ```
 #### Response
-The Path:
-```python
-#TODO: Add Code
-```
 The Object:
 ```python
-{ CurrencyData: 
-   [ { CurrencyId: 76,
-       CurrencyCode: 'KHR',
-       CurrencyName: 'Cambodian Riels',
-       CurrencyAmountScale: 2,
-       CurrencyRateScale: 5,
-       Symbol: '៛',
-       PaymentCutoffTime: '16:00',
-       SettlementDaysToAdd: 0 },
-     { CurrencyId: 83,
-       CurrencyCode: 'LAK',
-       CurrencyName: 'Lao Kips',
-       CurrencyAmountScale: 2,
-       CurrencyRateScale: 5,
-       Symbol: '₭',
-       PaymentCutoffTime: '16:00',
-       SettlementDaysToAdd: 0 },
-     { CurrencyId: 95,
-       CurrencyCode: 'MMK',
-       CurrencyName: 'Myanmar (Burma) Kyats',
-       CurrencyAmountScale: 2,
-       CurrencyRateScale: 4,
-       Symbol: 'MMK',
-       PaymentCutoffTime: '16:00',
-       SettlementDaysToAdd: 0 },
-     { CurrencyId: 141,
-       CurrencyCode: 'THB',
-       CurrencyName: 'Thai Baht',
-       CurrencyAmountScale: 2,
-       CurrencyRateScale: 3,
-       Symbol: '฿',
-       PaymentCutoffTime: '16:00',
-       SettlementDaysToAdd: 0 },
-     { CurrencyId: 153,
-       CurrencyCode: 'USD',
-       CurrencyName: 'US Dollars',
-       CurrencyAmountScale: 2,
-       CurrencyRateScale: 4,
-       Symbol: '$',
-       PaymentCutoffTime: '23:00',
-       SettlementDaysToAdd: 2 } ] }
-
+{
+    'ServiceResponse': {
+        'HasErrors': False,
+        'HasWarnings': False,
+        'Responses': {
+            'ServiceResponseData': [
+                {
+                    'ResponseCode': 0L,
+                    'ResponseType': 'Information',
+                    'Message': 'Success',
+                    'MessageDetails': 'Command completed successfully',
+                    'FieldName': None,
+                    'FieldValue': None
+                }
+            ]
+        }
+    },
+    'Currencies': {
+        'CurrencyData': [
+            {
+                'CurrencyId': 76L,
+                'CurrencyCode': 'KHR',
+                'CurrencyName': 'Cambodian Riels',
+                'CurrencyAmountScale': 2L,
+                'CurrencyRateScale': 5L,
+                'Symbol': u'\u17db',
+                'PaymentCutoffTime': '16:00',
+                'SettlementDaysToAdd': 0L
+            },
+            {
+                'CurrencyId': 83L,
+                'CurrencyCode': 'LAK',
+                'CurrencyName': 'Lao Kips',
+                'CurrencyAmountScale': 2L,
+                'CurrencyRateScale': 5L,
+                'Symbol': u'\u20ad',
+                'PaymentCutoffTime': '16:00',
+                'SettlementDaysToAdd': 0L
+            },
+            {
+                'CurrencyId': 95L,
+                'CurrencyCode': 'MMK',
+                'CurrencyName': 'Myanmar (Burma) Kyats',
+                'CurrencyAmountScale': 2L,
+                'CurrencyRateScale': 4L,
+                'Symbol': 'MMK',
+                'PaymentCutoffTime': '16:00',
+                'SettlementDaysToAdd': 0L
+            },
+            {
+                'CurrencyId': 141L,
+                'CurrencyCode': 'THB',
+                'CurrencyName': 'Thai Baht',
+                'CurrencyAmountScale': 2L,
+                'CurrencyRateScale': 3L,
+                'Symbol': u'\u0e3f',
+                'PaymentCutoffTime': '16:00',
+                'SettlementDaysToAdd': 0L
+            },
+            {
+                'CurrencyId': 153L,
+                'CurrencyCode': 'USD',
+                'CurrencyName': 'US Dollars',
+                'CurrencyAmountScale': 2L,
+                'CurrencyRateScale': 4L,
+                'Symbol': '$',
+                'PaymentCutoffTime': '23:00',
+                'SettlementDaysToAdd': 2L
+            }
+        ]
+    }
+}
 ```
 ### CustomerAccountBalancesGet
 #### Call
