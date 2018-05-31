@@ -384,7 +384,7 @@ The Object:
 FXDealQuoteBookAndInstantDeposit.py
 
 ### FXDealQuoteCreate
-
+Creates a FX Deal Quote, which later can be poosted to execute
 
 ### GetCustomerAccountBalances
 This is identical to the [CustomerAccountBalancesGet](#customeraccountbalancesget) endpoint and is listed for historical reasons only.
