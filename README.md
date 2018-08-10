@@ -1,7 +1,6 @@
 # winstantpay-apipy
 
-
-![The WinstantPay Logo](http://www.winstantpay.com/assets/img/logo-winstantpay-L-notag-trans.png "The WinstantPay Logo")
+![The WinstantPay Logo](https://www.winstantpay.com/imgs/logo-78.png "The WinstantPay Logo")
 
 These are the Python examples for using the WinstantPay webservice API
 
